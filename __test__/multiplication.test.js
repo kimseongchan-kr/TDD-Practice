@@ -22,4 +22,6 @@ test('같은 객체의 인스턴스인지 확인', () => {
   expect(new Dollar(5).equals(new Dollar(6))).toBeFalsy();
   expect(new Franc(5).equals(new Franc(5))).toBeTruthy();
   expect(new Franc(5).equals(new Franc(6))).toBeFalsy();
+
+  expect(new Franc(5).equals(new Dollar(5))).toBeFalsy();
 });
