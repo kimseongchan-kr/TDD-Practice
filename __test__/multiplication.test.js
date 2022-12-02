@@ -1,6 +1,7 @@
 import './assertEquals';
 
 import Dollar from '../src/Dollar';
+import Franc from '../src/Franc';
 
 test('달러 곱셈 테스트', () => {
   const five = new Dollar(5);
