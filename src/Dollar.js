@@ -1,6 +1,12 @@
 class Dollar {
+  #amount;
+
   constructor(amount) {
-    this.amount = amount;
+    this.#amount = amount;
+  }
+
+  get amount() {
+    return this.#amount;
   }
 
   times(multiplier) {
@@ -8,8 +14,9 @@ class Dollar {
   }
 
   equals(object) {
-    const Dollar = object;
-    return this.amount === Dollar.amount;
+    const dollar = object;
+
+    return this.#amount === dollar.#amount;
   }
 }
 
