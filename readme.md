@@ -2,18 +2,18 @@
 
 ### 할 일
 - [ ] $5 + 10CHF = $10
-- [x] ~~~$5 x 2 = $10~~~
-- [x] ~~~Dollar 부작용?~~~
+- [x] ~~$5 x 2 = $10~~
+- [x] ~~Dollar 부작용?~~
 - [ ] Money 반올림?
-- [x] ~~~equals()~~~
+- [x] ~~equals()~~
 - [ ] hashCode()
 - [ ] Equal null
 - [ ] Equal object
-- [x] ~~~5CHF x 2 = 10CHF~~~
+- [x] ~~5CHF x 2 = 10CHF~~
 - [ ] Dollar/Franc 중복
-- [x] ~~~공용 equals~~~
+- [x] ~~공용 equals~~
 - [ ] 공용 times
-- [x] ~~~Franc과 Dollar 비교하기~~~
+- [x] ~~Franc과 Dollar 비교하기~~
 - [ ] 통화?
 
 <br>
