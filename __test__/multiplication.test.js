@@ -26,6 +26,6 @@ test('amount의 값과 인스턴스가 같은지 확인하는 테스트', () => 
 });
 
 test('인스턴스에 맞는 통화 문자열을 가지고 있는지 확인하는 테스트', () => {
-  expect(Money.dollar(1).currency()).toBe('USD');
-  expect(Money.franc(1).currency()).toBe('CHF');
+  expect(Money.dollar(1).getCurrency()).toBe('USD');
+  expect(Money.franc(1).getCurrency()).toBe('CHF');
 });
