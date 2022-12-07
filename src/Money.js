@@ -3,7 +3,8 @@ class Money {
 
   constructor(amount) {
     this.#amount = amount;
-    if (this.times === undefined) {
+
+    if (!this.times && !this.currency) {
       throw new TypeError('Must override method');
     }
   }
@@ -18,6 +19,10 @@ class Money {
     return this.#amount === money.amount && this.constructor.name === object.constructor.name;
   }
 
+  getCurrency() {
+    return this.currency;
+  }
+
   static dollar(amount) {
     return new Dollar(amount);
   }
@@ -28,6 +33,8 @@ class Money {
 }
 
 class Dollar extends Money {
+  currency = 'USD';
+
   constructor(amount) {
     super(amount);
   }
@@ -38,6 +45,8 @@ class Dollar extends Money {
 }
 
 class Franc extends Money {
+  currency = 'CHF';
+
   constructor(amount) {
     super(amount);
   }
