@@ -1,6 +1,7 @@
-# 8장 객체 만들기
+# 10장 흥미로운 시간
 
 ### 할 일
+
 - [ ] $5 + 10CHF = $10
 - [x] ~~$5 x 2 = $10~~
 - [x] ~~Dollar 부작용?~~
@@ -14,177 +15,180 @@
 - [x] ~~공용 equals~~
 - [ ] 공용 times
 - [x] ~~Franc과 Dollar 비교하기~~
-- [ ] 통화?
+- [ ] **통화?**
+- [ ] "프랑 곱셈 테스트" 제거
 
 <br>
 
-- 5장에서 작업한 Franc 객체가 Dollar 객체와 중복이 발생했고, 7장에서 중복이 발생한 amount와 equals()를 제거했습니다.
+- 하위 클래스를 제거하기 위해선 times()를 상위 클래스로 올려야한다.
 
 ```javascript
-// Franc
-class Franc extends Money {
-  times(multiplier) {
-    return new Franc(this.amount * multiplier);
-  }
-}
-
-// Dollar
 class Dollar extends Money {
+  // ...
+
   times(multiplier) {
-    return new Dollar(this.amount * multiplier);
+    return Money.dollar(super.amount * multiplier);
+  }
+}
+
+class Franc extends Money {
+  // ...
+
+  times(multiplier) {
+    return Money.franc(super.amount * multiplier);
   }
 }
 ```
 
-- 두 times()를 보면 구현 코드가 똑같으므로 중복 코드입니다.
-- 또 위 객체들은 많은 일을 하고 있지 않기 때문에 제거해도 괜찮아보입니다.
-- 따라서 하위 클래스를 제거해도 괜찮아 보입니다.
-
-<br>
-
-- 책에서는 "제거해도 괜찮아보이는 객체(?)" 같이 확신이 들지 않는 작업을 단계별로 작업하여 "제거해도 괜찮은 객체"라는 것을 확신 시켜줍니다.
-- 첫 단계는 하위 클래스를 제거하기 위해 객체에 직집적인 참조를 줄여야 합니다.
-- 또 객체에 직접적인 참조를 줄이기 위해 팩토리 메서드(factory method: 팩토리 패턴)를 도입합니다.
-
-<br>
+- 하지만 아직 times()의 구현이 동일하지 않기 때문에 상위 클래스로 올릴 수 없다.
+- 당장 현 상황에서 두 메소드를 동일하게 만들 방법이 없기 때문에 다시 인스턴스를 생성하는 방식으로 변경하였다.
+- 그리고 인스턴스가 생성될 때 currency는 생성자 함수에서 정해진 값을 할당 받기 때문에 아래와 같이 수정할 수 있다.
 
 ```javascript
-test('달러 곱셈 테스트', () => {
-  const five = Money.dollar(5);
-
-  expect(true).assertEquals(new Dollar(10), five.times(2));
-  expect(true).assertEquals(new Dollar(15), five.times(3));
-});
-```
-
-- 먼저 위 같이 테스트 코드를 작성합니다.
-- 테스트 코드를 실행하면 당연히 dollar()가 구현되어 있지 않기 때문에 Fail이 발생합니다.
-
-<br>
-
-```javascript
-static dollar(amount) {
-    return new Dollar(amount);
+class Dollar extends Money {
+  constructor(amount, currency) {
+    super(amount, currency);
   }
-```
 
-- dollar()를 구현합니다.
-- dollar()는 Dollar 객체를 반환합니다.
+  times(multiplier) {
+    return Money.dollar(super.amount * multiplier, super.currency);
+  }
+}
 
-<br>
+class Franc extends Money {
+  constructor(amount, currency) {
+    super(amount, currency);
+  }
 
-- 테스트를 돌려보면 Money에 times() 메소드가 없기 때문에 Fail이 발생합니다.
-
-<br>
-
-```javascript
-if (this.times === undefined) {
-  throw new TypeError('Must override method');
+  times(multiplier) {
+    return new Franc(super.amount * multiplier, super.currency);
+  }
 }
 ```
 
-- 책에서는 times()를 아직 구현할 준비가 되어있지 않다고 하며, times()를 추상 클래스로 만들어 기존 객체가 가지고 있는 times() 오버라이딩할 수 있게 합니다.
-- 덕분에 기존 객체가 가지고 있는 times()를 그대로 사용하게 되며, 테스트 실행하면 정상적으로 Pass됩니다!
-- 변경한 펙토리 메서드가 테스트 코드를 통과했기 때문에 다른 곳에서도 사용할 수 있다는 근거가 생겼습니다.
-
-<br>
+- 이제 Franc이 정말로 필요한지, Money로 대체해도 괜찮은지 알아야한다.
+- Money로 변경하고 테스트 코드를 실행시켜 Money로 변경해도 괜찮은지 테스트 코드에게 물어보자!
 
 ```javascript
-// before
-test('달러 곱셈 테스트', () => {
-  const five = Money.dollar(5);
+class Franc extends Money {
+  constructor(amount, currency) {
+    super(amount, currency);
+  }
 
-  expect(true).assertEquals(new Dollar(10), five.times(2));
-  expect(true).assertEquals(new Dollar(15), five.times(3));
-});
-
-test('amount의 값과 인스턴스가 같은지 확인하는 테스트', () => {
-  expect(new Dollar(5).equals(new Dollar(5))).toBeTruthy();
-  expect(new Dollar(5).equals(new Dollar(6))).toBeFalsy();
-  expect(new Franc(5).equals(new Franc(5))).toBeTruthy();
-  expect(new Franc(5).equals(new Franc(6))).toBeFalsy();
-
-  expect(new Franc(5).equals(new Dollar(5))).toBeFalsy();
-});
-
-// after
-test('달러 곱셈 테스트', () => {
-  const five = Money.dollar(5);
-
-  expect(true).assertEquals(Money.dollar(10), five.times(2));
-  expect(true).assertEquals(Money.dollar(15), five.times(3));
-});
-
-test('amount의 값과 인스턴스가 같은지 확인하는 테스트', () => {
-  expect(Money.dollar(5).equals(Money.dollar(5))).toBeTruthy();
-  expect(Money.dollar(5).equals(Money.dollar(6))).toBeFalsy();
-  expect(new Franc(5).equals(new Franc(5))).toBeTruthy();
-  expect(new Franc(5).equals(new Franc(6))).toBeFalsy();
-
-  expect(new Franc(5).equals(Money.dollar(5))).toBeFalsy();
-});
-```
-
-- 위와 같이 펙토리 메서드를 사용하도록 변경했습니다.
-- 또 구조를 변경하면서 2가지의 이점이 생겼습니다.
-
-  1. 클라이언트 코드가 Dollar라는 객체의 존재를 알지 못 합니다.
-  2. (이 부분은 잘 이해하지 못했습니다.) 책에서는 하위 클래스(객체)의 존재를 테스트에서 분리함으로써 어떤 모델 코드에도 영향을 주지 않고 상속 구조를 마음대로 변경할 수 있게 되었다고 합니다.
-
-  - 이 글을 제가 이해한 대로 정리하면 테스트 코드에서 직접적으로 인스턴스를 생성하는 부분(참조하는 부분)을 분리함으로써 Dollar 객체(모델 코드)의 상관 없이 상위 객체 Money의 구조를 마음대로 수정할 수 있게 되었다라고 이해했습니다.
-
-- 이제 franc 객체를 직접적으로 참조하는 부분도 변경해야합니다.
-
-<br>
-
-```javascript
-test('프랑 곱셈 테스트', () => {
-  const five = Money.franc(5);
-
-  expect(true).assertEquals(Money.franc(10), five.times(2));
-  expect(true).assertEquals(Money.franc(15), five.times(3));
-});
-
-test('amount의 값과 인스턴스가 같은지 확인하는 테스트', () => {
-  expect(Money.dollar(5).equals(Money.dollar(5))).toBeTruthy();
-  expect(Money.dollar(5).equals(Money.dollar(6))).toBeFalsy();
-  expect(Money.franc(5).equals(Money.franc(5))).toBeTruthy();
-  expect(Money.franc(5).equals(Money.franc(6))).toBeFalsy();
-
-  expect(Money.franc(5).equals(Money.dollar(5))).toBeFalsy();
-});
-```
-
-- 그런데 "프랑 곱셈 테스트" 로직을 살펴보면 "달러 곱셈 테스트"에서 검사하는 것과 동일하다는 것을 알 수 있습니다.
-- 따라서 삭제해도 무방해 보이지만 예외 케이스가 발생할 수 있으니 남겨두고 할 일 리스트에 추가하기로 합니다.
-  - [ ] "프랑 곱셈 테스트"를 지워야 할까?
-
-- 다시 돌아와서 Money에는 아직 franc()가 없기 때문에 테스트는 Fail이 발생합니다.
-
-<br>
-
-```javascript
-static franc(amount) {
-    return new Franc(amount);
+  times(multiplier) {
+    return new Money(super.amount * multiplier, super.currency);
+  }
 }
 ```
 
-- franc()를 작업하고 테스트를 실행해보면 통과합니다!
-- 다음 장에서는 이번 장에 제거하지 못한 times()를 작업할 예정입니다.
+- '프랑 곱셈 테스트'에 `expect(true).assertEquals(Money.franc(10), five.times(2));` 코드에서 에러가 발생했다.
+- equals()를 확인해보니 인스턴스의 프로토타입을 비교하고 있다.
+- 저자분은 빨간 막대인 상황에서 추가적인 테스트 코드를 작성할 수 없다고 한다.
+- 따라서 초록 막대 상태로 돌아가 테스크 코드를 추가해야한다.
+
+> 저자분도 위 같이 말씀하셨지만 때때로 빨간 막대인 상태에서 테스트 코드를 작성한다고 하신다!
+> 우리가 배우면 안되니까...
+
+```javascript
+class Franc extends Money {
+  constructor(amount, currency) {
+    super(amount, currency);
+  }
+
+  times(multiplier) {
+    return new Franc(super.amount * multiplier, super.currency);
+  }
+}
+```
+
+- 다시 초록 막대로 돌아왔다.
+- 우리는 `new Franc(10, "CHF")`와 `Money(10, "CHF")`가 같아야 하지만, 테스트 코드에서 실패하였다.
+- 이 토대로 테스트 코드를 작성해서 테스트 코드를 실행해보면 오류가 발생한다.
+
+```javascript
+test('두 인스턴스의 프로토타입이 같은지 확인', () => {
+  expect(true).assertEquals(Money.franc(10), new Money(10, 'CHF'));
+});
+```
+
+- times() 추상 메소드이기 때문에 Money에서 선언이 되어있지 않아 오류가 발생했다.
+
+```javascript
+class Money {
+  // ...
+
+  times() {
+    return null;
+  }
+
+  // ...
+}
+```
+
+- 다시 테스트를 돌려보니 역시 빨간 막대가 등장했다.
+- equals() 코드는 프로토타입이 아닌 currency를 비교해야 한다.
+
+```javascript
+class Money {
+  // ...
+
+  equals(object) {
+    const money = object;
+
+    return this.#amount === money.amount && this.#currency === object.currency;
+  }
+
+  // ...
+}
+
+class Franc extends Money {
+  constructor(amount, currency) {
+    super(amount, currency);
+  }
+
+  times(multiplier) {
+    return new Money(super.amount * multiplier, super.currency);
+  }
+}
+```
+
+- Franc.times()에도 Money를 반환하도록 변경하고 테스트 코드를 돌려보면 통과한다!
+- 이제 Dollar에도 적용하자!
+
+```javascript
+class Dollar extends Money {
+  constructor(amount, currency) {
+    super(amount, currency);
+  }
+
+  times(multiplier) {
+    return new Money(super.amount * multiplier, super.currency);
+  }
+}
+```
+
+- Dollar도 통과하였다.
+- 이제 코드가 동일해졌으니 상위 클래스로 옮길 수 있다!
+
+```javascript
+class Money {
+  times(multiplier) {
+    return new Money(this.#amount * multiplier, this.#currency);
+  }
+}
+```
+
+- 이제 하위 클래스의 모든 기능을 상위 클래스로 옮겼다.
+- 이 말은 더 이상 하위 클래스가 아무 동작도 하지 않는다는 뜻으로 드디어 이제 하위 클래스를 지울 수 있다!
 
 <br>
 
 ## 정리
 
-- 동일한 메서드(times)의 두 변이형 메서드 서명부를 통일시킴으로써 중복 제거를 향해 한 단계 더 전진했다.
-- 최소한 메서드 선언부만이라도 공통 상위 클래스(superclass)로 옮겼다.
-- 팩토리 메서드를 도입하여 테스트 코드에서 콘크리트 하위 클래스의 존재 사실을 분리해냈다.
-- 하위 클래스가 사라지면 몇몇 테스트는 불필요한 여분의 것이 된다는 것을 인식했다. 하지만 그냥 뒀다.
-
-<br>
-
-## 이번 장을 읽고 느낀 점
-
-- 상당히 재미있는 챕터였습니다.
-- TDD를 통해 구조를 변경하면서 해당 구조의 대한 확신을 얻고, 그 확신은 근거가 되어 다른 부분을 수정할 때 작업이 편리해지는 것을 느낄 수 있었습니다.
-- 구조를 변경하기 전,후에 얻을 수 있는 이점을 글로 정리하는 버릇을 들이면 좋을 것 같다는 생각을 했습니다.
+- 두 times()를 일치시키기 위해 그 메서드들이 호출하는 다른 메서드들을 인라인시킨 후 상수를 변수로 바꿔주었다.
+- 단지 디버깅을 위해 테스트 없이 toString()을 작성했다.
+  > 자바에서만 발생하는 오류로 인해 책에서는 toString()을 작성하였다.
+  > 책에서는 화면에 나타는 결과를 확인하기 위해 디버그 출력만을 위해 toString()을 작성하였다.
+  > 이 메소드가 잘 못 구현되어서 얻게될 리스트가 적고, 이미 빨간 막대인 상태에서 테스트 코드를 추가하지 않는 것이 좋아 toString을 작성하였다.
+- Franc 대신 Money를 반환하는 변경을 시도한 뒤 그것이 잘 작동할지를 테스트가 말하도록 했다.
+- 실험해본 걸 뒤로 물리고 또 다른 테스트를 작성했다. 테스트를 작동했더니 실험으로 제대로 작동했다.
