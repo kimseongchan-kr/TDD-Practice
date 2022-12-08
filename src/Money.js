@@ -24,23 +24,22 @@ class Money {
   }
 
   static dollar(amount) {
-    return new Dollar(amount);
+    return new Dollar(amount, 'USD');
   }
 
-  static franc(amount, currency) {
-    return new Franc(amount, currency);
+  static franc(amount) {
+    return new Franc(amount, 'CHF');
   }
 }
 
 class Dollar extends Money {
-  currency = 'USD';
-
-  constructor(amount) {
+  constructor(amount, currency) {
     super(amount);
+    this.currency = currency;
   }
 
   times(multiplier) {
-    return new Dollar(super.amount * multiplier);
+    return Money.dollar(super.amount * multiplier);
   }
 }
 
