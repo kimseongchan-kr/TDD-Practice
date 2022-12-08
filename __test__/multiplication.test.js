@@ -29,3 +29,7 @@ test('인스턴스에 맞는 통화 문자열을 가지고 있는지 확인하�
   expect(Money.dollar(1).currency).toBe('USD');
   expect(Money.franc(1).currency).toBe('CHF');
 });
+
+test('두 인스턴스의 프로토타입이 같은지 확인', () => {
+  expect(true).assertEquals(Money.franc(10), new Money(10, 'CHF'));
+});
