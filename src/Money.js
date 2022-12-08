@@ -27,8 +27,8 @@ class Money {
     return new Dollar(amount);
   }
 
-  static franc(amount) {
-    return new Franc(amount);
+  static franc(amount, currency) {
+    return new Franc(amount, currency);
   }
 }
 
@@ -45,14 +45,13 @@ class Dollar extends Money {
 }
 
 class Franc extends Money {
-  currency = 'CHF';
-
-  constructor(amount) {
+  constructor(amount, currency) {
     super(amount);
+    this.currency = currency;
   }
 
   times(multiplier) {
-    return new Franc(super.amount * multiplier);
+    return Money.franc(super.amount * multiplier);
   }
 }
 
