@@ -25,8 +25,8 @@ class Money {
     return this.#amount === money.amount && this.#currency === object.currency;
   }
 
-  times() {
-    return null;
+  times(multiplier) {
+    return new Money(this.#amount * multiplier, this.#currency);
   }
 
   static dollar(amount) {
