@@ -22,7 +22,11 @@ class Money {
   equals(object) {
     const money = object;
 
-    return this.#amount === money.amount && this.constructor.name === object.constructor.name;
+    return this.#amount === money.amount && this.#currency === object.currency;
+  }
+
+  times() {
+    return null;
   }
 
   static dollar(amount) {
@@ -40,7 +44,7 @@ class Dollar extends Money {
   }
 
   times(multiplier) {
-    return Money.dollar(super.amount * multiplier, super.currency);
+    return new Money(super.amount * multiplier, super.currency);
   }
 }
 
@@ -50,7 +54,7 @@ class Franc extends Money {
   }
 
   times(multiplier) {
-    return new Franc(super.amount * multiplier, super.currency);
+    return new Money(super.amount * multiplier, super.currency);
   }
 }
 
