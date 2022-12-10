@@ -19,8 +19,6 @@ test('프랑 곱셈 테스트', () => {
 test('amount의 값과 인스턴스가 같은지 확인하는 테스트', () => {
   expect(Money.dollar(5).equals(Money.dollar(5))).toBeTruthy();
   expect(Money.dollar(5).equals(Money.dollar(6))).toBeFalsy();
-  expect(Money.franc(5).equals(Money.franc(5))).toBeTruthy();
-  expect(Money.franc(5).equals(Money.franc(6))).toBeFalsy();
 
   expect(Money.franc(5).equals(Money.dollar(5))).toBeFalsy();
 });
@@ -28,8 +26,4 @@ test('amount의 값과 인스턴스가 같은지 확인하는 테스트', () => 
 test('인스턴스에 맞는 통화 문자열을 가지고 있는지 확인하는 테스트', () => {
   expect(Money.dollar(1).currency).toBe('USD');
   expect(Money.franc(1).currency).toBe('CHF');
-});
-
-test('두 인스턴스의 프로토타입이 같은지 확인', () => {
-  expect(true).assertEquals(Money.franc(10), new Money(10, 'CHF'));
 });
