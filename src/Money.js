@@ -30,23 +30,11 @@ class Money {
   }
 
   static dollar(amount) {
-    return new Dollar(amount, 'USD');
+    return new Money(amount, 'USD');
   }
 
   static franc(amount) {
-    return new Franc(amount, 'CHF');
-  }
-}
-
-class Dollar extends Money {
-  constructor(amount, currency) {
-    super(amount, currency);
-  }
-}
-
-class Franc extends Money {
-  constructor(amount, currency) {
-    super(amount, currency);
+    return new Money(amount, 'CHF');
   }
 }
 
