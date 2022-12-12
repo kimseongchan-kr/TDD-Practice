@@ -29,6 +29,10 @@ class Money {
     return new Money(this.#amount * multiplier, this.#currency);
   }
 
+  plus(amount) {
+    return new Money(this.#amount + amount, this.#currency);
+  }
+
   static dollar(amount) {
     return new Money(amount, 'USD');
   }
