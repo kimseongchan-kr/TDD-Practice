@@ -3,6 +3,7 @@ import './assertEquals';
 import Money from '../src/Money';
 import Bank from '../src/Bank';
 import Sum from '../src/Sum';
+import { isBreakOrContinueStatement } from 'typescript';
 
 test('화폐 곱셈 테스트', () => {
   const five = Money.dollar(5);
@@ -50,4 +51,11 @@ test('입력받은 Money()로 reduce로 환율 계산하기', () => {
   const bank = new Bank();
   const result = bank.reduce(Money.dollar(1), 'USD');
   expect(true).assertEquals(Money.dollar(1), result);
+});
+
+test('다른 통화로 환율 계산하기', () => {
+  const bank = new Bank();
+  bank.addRate('CHF', 'USD', 2);
+  const result = bank.reduce(Money.franc(2), 'USD');
+  expect.assertEquals(Money.dollar(1), result);
 });
