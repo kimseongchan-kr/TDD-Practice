@@ -1,8 +1,10 @@
-class Money {
-  #amount;
-  #currency;
+import Sum from './Sum';
 
-  constructor(amount, currency) {
+class Money {
+  #amount: number;
+  #currency: string;
+
+  constructor(amount: number, currency: string) {
     this.#amount = amount;
     this.#currency = currency;
 
@@ -19,25 +21,29 @@ class Money {
     return this.#currency;
   }
 
-  equals(object) {
+  equals(object: Money) {
     const money = object;
 
     return this.#amount === money.amount && this.#currency === object.currency;
   }
 
-  times(multiplier) {
+  times(multiplier: number) {
     return new Money(this.#amount * multiplier, this.#currency);
   }
 
-  plus(amount) {
-    return new Money(this.#amount + amount, this.#currency);
+  plus(object: Money) {
+    return new Sum(this, object);
   }
 
-  static dollar(amount) {
+  reduce(to: string) {
+    return this;
+  }
+
+  static dollar(amount: number) {
     return new Money(amount, 'USD');
   }
 
-  static franc(amount) {
+  static franc(amount: number) {
     return new Money(amount, 'CHF');
   }
 }
