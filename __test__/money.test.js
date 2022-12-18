@@ -59,3 +59,7 @@ test('다른 통화로 환율 계산하기', () => {
   const result = bank.reduce(Money.franc(2), 'USD');
   expect.assertEquals(Money.dollar(1), result);
 });
+
+test('생성한 배열이 같은지 확인', () => {
+  expect(new Array('abc') === new Array('abc')).toBe(true);
+});
