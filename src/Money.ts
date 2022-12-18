@@ -1,3 +1,4 @@
+import Bank from './Bank';
 import Sum from './Sum';
 
 class Money {
@@ -35,8 +36,9 @@ class Money {
     return new Sum(this, object);
   }
 
-  reduce(to: string) {
-    return this;
+  reduce(bank: Bank, to: string) {
+    const rate = this.#currency === 'CHF' && to === 'USD' ? 2 : 1;
+    return new Money(this.#amount / rate, to);
   }
 
   static dollar(amount: number) {

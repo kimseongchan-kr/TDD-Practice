@@ -3,7 +3,7 @@ import Money from './Money';
 
 class Bank {
   reduce(source: Expression, to: string) {
-    return source.reduce(to);
+    return source.reduce(this, to);
   }
 }
 
