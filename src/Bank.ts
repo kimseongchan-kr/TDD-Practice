@@ -1,13 +1,23 @@
 import Expression from './Expression';
-import Money from './Money';
+import Pair from './Pair';
+
+interface Hashtable {
+  [hashKey: string]: number;
+}
 
 class Bank {
+  #rates: Hashtable = {};
+
   reduce(source: Expression, to: string) {
     return source.reduce(this, to);
   }
 
+  addRate(from: string, to: string, rate: number) {
+    this.#rates[new Pair(from, to).key] = rate;
+  }
+
   rate(from: string, to: string) {
-    return from === 'CHF' && to === 'USD' ? 2 : 1;
+    return this.#rates[new Pair(from, to).key];
   }
 }
 
