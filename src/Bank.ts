@@ -17,6 +17,10 @@ class Bank {
   }
 
   rate(from: string, to: string) {
+    if (from === to) {
+      return 1;
+    }
+
     return this.#rates[new Pair(from, to).key];
   }
 }
