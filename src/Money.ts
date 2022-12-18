@@ -37,7 +37,7 @@ class Money {
   }
 
   reduce(bank: Bank, to: string) {
-    const rate = this.#currency === 'CHF' && to === 'USD' ? 2 : 1;
+    const rate = bank.rate(this.#currency, to);
     return new Money(this.#amount / rate, to);
   }
 
