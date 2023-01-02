@@ -8,7 +8,7 @@ class Pair {
   }
 
   get key() {
-    return [this.#from, this.#to].sort().join('');
+    return [this.#from, this.#to].join('');
   }
 }
 
