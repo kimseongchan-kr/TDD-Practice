@@ -1,8 +1,8 @@
 import Bank from './Bank';
 
 interface Expression {
-  amount: number;
   reduce(bank: Bank, to: string): Expression;
+  plus(addend: Expression): any;
 }
 
 export default Expression;
