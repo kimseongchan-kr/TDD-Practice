@@ -1,4 +1,5 @@
 import Bank from './Bank';
+import Expression from './Expression';
 import Sum from './Sum';
 
 class Money {
@@ -32,7 +33,7 @@ class Money {
     return new Money(this.#amount * multiplier, this.#currency);
   }
 
-  plus(object: Money) {
+  plus(object: Expression) {
     return new Sum(this, object);
   }
 
