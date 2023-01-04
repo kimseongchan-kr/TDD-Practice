@@ -1,4 +1,16 @@
-const assertEquals = (boolean = true, object1, object2) => {
+import { types } from '@babel/core';
+import Expression from '../src/Expression';
+import Money from '../src/Money';
+
+declare global {
+  namespace jest {
+    interface Matchers<R> {
+      assertEquals(object: Money, object2: Money | Expression): CustomMatcherResult;
+    }
+  }
+}
+
+const assertEquals = (boolean = true, object1: Money, object2: Money) => {
   if (typeof object1 !== 'object' || typeof object2 !== 'object') {
     throw new Error('오브젝트 타입이어야 합니다.');
   }

@@ -3,6 +3,7 @@ import './assertEquals';
 import Money from '../src/Money';
 import Bank from '../src/Bank';
 import Sum from '../src/Sum';
+import Expression from '../src/Expression';
 
 test('화폐 곱셈 테스트', () => {
   const five = Money.dollar(5);
@@ -64,8 +65,8 @@ test('USD에서 USD로 환전하면 1이 된다.', () => {
 });
 
 test('다른 화폐끼리 더하기', () => {
-  const fiveBucks = Money.dollar(5);
-  const tenFrancs = Money.franc(10);
+  const fiveBucks: Expression = Money.dollar(5);
+  const tenFrancs: Expression = Money.franc(10);
 
   const bank = new Bank();
 
