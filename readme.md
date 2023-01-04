@@ -20,17 +20,17 @@
 <br>
 
 ```javascript
-test('다른 화폐끼리 더하기', () => {
-  const fiveBucks = Money.dollar(5);
-  const tenFrancs = Money.franc(10);
-
-  const bank = new Bank();
+test('Sum.plus 함수 테스트', () => {
+  const fiveBucks: Expression = Money.dollar(5);
+  const tenFrancs: Expression = Money.franc(10);
+  const bank: Bank = new Bank();
 
   bank.addRate('CHF', 'USD', 2);
 
-  const result = bank.reduce(fiveBucks.plus(tenFrancs), 'USD');
+  const sum = new Sum(fiveBucks, tenFrancs).plus(fiveBucks);
+  const result = bank.reduce(sum, 'USD');
 
-  expect(true).assertEquals(Money.dollar(10), result);
+  expect(true).assertEquals(Money.dollar(15), result);
 });
 ```
 
